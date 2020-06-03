@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+
+<launch>
+
+	<!-- launch the mocap, make sure to edit the mocap config to have the bebops -->
+<!--
+	<include file="$(find mocap_optitrack)/launch/mocap.launch"/>
+-->
+	
+	<!-- launch the joy node and arbiter node, joy node is launched from the arbiter -->
+<!--
+	<include file="$(find arbiter)/launch/arbiter.launch"/>
+-->
+
+	<!-- start the herding node -->
+    <node pkg="single_agent_herding_n_agents_nn" type="herding_nn_des_odom" name="herding_nn_des_odom" output="screen">
+        
+        
+        <!-- RUN FOR SAVING-->
+        <param name="runNumber" value=""/>
+        <param name="saveData" value="true"/>
+        
+        <!-- params -->
+        <param name="bearName" value="bebop1"/>
+        
+        <rosparam param="sheepName"> ["sheep0"]</rosparam>
+<!--
+        <rosparam param="sheepName"> ["sheep0","sheep1","sheep2","sheep3","sheep4","sheep5"]</rosparam>
+-->
+<!--
+        <rosparam param="sheepName"> ["sheep1","sheep3","sheep4"]</rosparam>
+-->
+<!--
+        <param name="k1" value="0.25"/>
+        <param name="k2" value="1.0"/>
+        <param name="k3" value="0.5"/>
+        <param name="ky" value="0.25"/>
+-->
+		<param name="k1" value="0.1"/>
+        <param name="k2" value="1.0"/>
+        <param name="k3" value="0.4"/>
+        <param name="ky" value="0.4"/>
+        <param name="ks" value="0.001"/>
+        <param name="kcl" value="0.001"/>
+        <param name="Gamma" value="0.005"/>
+        <param name="Deltat" value="0.333"/>
+        <param name="N" value="100"/>
+        <param name="chasingRatio" value="0.2"/>
+        <rosparam param="bearWall"> [-5.5,5.5,-1.9,1.9]</rosparam>
+<!--
+        <param name="height" value="0.4"/>
+-->
+		<param name="height" value="1.0"/>
+        <param name="originRadius" value="0.5"/>
+        <param name="pushToGoal" value="true"/>
+        
+        <rosparam param="xg"> [0.0,0.0]</rosparam>
+<!--
+        <rosparam param="xg"> [0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0]</rosparam>
+-->
+<!--
+		<rosparam param="xg"> [0.0,0.0, 0.0,0.0, 0.0,0.0]</rosparam>
+-->
+<!--
+        <rosparam param="xg"> [2.13,0.65, -2.54,0.0, 2.81,0.0, -1.29,-0.62, -1.74,0.58, 1.62,-0.58]</rosparam>
+-->
+<!--
+		<rosparam param="xg"> [2.0,0.0, -2.0,0.0, 2.0,0.0, -2.0,0.0, -2.0,0.0, 2.0,0.0]</rosparam>
+-->
+        <param name="sm" value="2.0"/>
+        <param name="s" value="0.5"/>
+        <param name="L1quad" value="50"/>
+        <param name="lambda" value="0.0001"/>
+<!--
+		<rosparam param="xg"> [0,0, 0,0, 0,0]</rosparam>
+-->
+        <param name="velMaxRelDiff" value="0.1"/>
+    </node>
+    
+</launch>

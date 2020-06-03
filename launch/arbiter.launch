@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<launch>
+
+<!-- MAKE SURE TO SET THE BEBOPS IN THE MOCAP CONFIG, BEAR, SHEEP, and ARBITER NODES -->
+
+	<include file="$(find mocap_optitrack)/launch/mocap.launch"/>
+
+	<!-- joy node -->
+	<node pkg="joy" type="joy_node" name="joy">
+		<param name="dev" value="/dev/input/js0"/>
+		<param name="deadzone" value="0.22"/>
+		<param name="autorepeat_rate" value="100.0"/>
+	</node>
+
+	<!-- arbiter node -->
+    <node pkg="single_agent_herding_n_agents_nn" type="herding_arbiter_nn" name="herding_arbiter_nn" output="screen">
+
+		<param name="trackDesVel" value="true"/>
+		<param name="trackWall" value="true"/>
+		<param name="trackNeighbor" value="true"/>
+		<param name="usePID" value="true"/>
+
+        <!-- bebop params -->
+        <rosparam param="activeBebops"> ["bebop1"]</rosparam> <!-- BEAR goes first then sheep in ascending order you want them clockwise around the dpad -->
+        <rosparam param="joyCmdBebopGain"> [1.0, 1.0, 1.0, 2.0]</rosparam>
+        <param name="bodyMinRadiusBebop" value="0.75"/>
+        <param name="bodyMaxRadiusBebop" value="0.85"/>
+        <param name="bodyGrowthRateBebop" value="0.25"/>
+        <param name="neighborGainBebop" value="3.0"/>
+        <param name="neighborGrowthRateBebop" value="12.0"/>
+        <param name="neighborTurnGainBebop" value="0.3"/>
+        <param name="wallGainBebop" value="2.0"/>
+        <param name="wallGrowthRateBebop" value="12.0"/>
+        <param name="wallRadiusBebop" value="-9.0"/>
+        <param name="wallTurnGainBebop" value="0.3"/>
+        <rosparam param="posePGains"> [0.6, 0.05, 0.6]</rosparam><!-- gain for position error tracking -->
+        <rosparam param="poseQGains"> [0.0, 0.0, 0.0]</rosparam><!-- gain for orientation error tracking -->
+        <rosparam param="linVelGains"> [0.5, 0.01, 0.5]</rosparam><!-- gain for linear velocity error tracking -->
+        <rosparam param="angVelGains"> [0.1, 0.01, 0.2]</rosparam><!-- gain for angular velocity error tracking -->
+        <param name="errorDerivativeBufferSize" value="5"/>
+        <param name="errorIntegralBufferSize" value="10"/>
+        <param name="kw" value="1.0"/>
+        <param name="cmdVelMaxRelDiff" value="0.1"/>
+
+        <!-- filter params -->
+        <param name="velocityBufferSizeInit" value="30"/>
+        <param name="predictWatchdogTimeInit" value="0.002"/>
+        <rosparam param="wallInit"> [-6.0, 6.0,-2.2,2.2,-1.0, 2.75]</rosparam><!-- walls-->
+    </node>
+</launch>

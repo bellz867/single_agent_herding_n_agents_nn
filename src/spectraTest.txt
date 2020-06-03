@@ -1,0 +1,42 @@
+#include <Eigen/Core>
+#include <Eigen/Eigenvalues>
+#include <MatOp/DenseGenMatProd.h>
+#include <MatOp/DenseSymShiftSolve.h>
+#include <SymEigsSolver.h>
+#include <iostream>
+
+using namespace Spectra;
+
+int main()
+{
+    srand(0);
+    // We are going to calculate the eigenvalues of M
+    Eigen::MatrixXd A = Eigen::MatrixXd::Random(1000, 1000);
+    Eigen::MatrixXd M = A.transpose() * A;
+
+    // Matrix operation objects
+    DenseGenMatProd<double> op_largest(M);
+    DenseSymShiftSolve<double> op_smallest(M);
+
+    // Construct solver object, requesting the largest 10 eigenvalues
+    SymEigsSolver< double, LARGEST_MAGN, DenseGenMatProd<double> >
+        eigs_largest(&op_largest, 10, 30);
+
+    // Initialize and compute
+    eigs_largest.init();
+    eigs_largest.compute();
+
+    std::cout << "Largest 10 Eigenvalues :\n" <<
+        eigs_largest.eigenvalues() << std::endl;
+
+    // Construct solver object, requesting the smallest 10 eigenvalues
+    SymEigsShiftSolver< double, LARGEST_MAGN, DenseSymShiftSolve<double> >
+        eigs_smallest(&op_smallest, 10, 30, 0.0);
+
+    eigs_smallest.init();
+    eigs_smallest.compute();
+    std::cout << "Smallest 10 Eigenvalues :\n" <<
+        eigs_smallest.eigenvalues() << std::endl;
+
+    return 0;
+}
